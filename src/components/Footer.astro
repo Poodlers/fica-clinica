@@ -1,53 +1,96 @@
 ---
-import Container from "./Container.astro";
 import { clinic } from "../data/clinic";
-
 const year = new Date().getFullYear();
 ---
 
-<footer style="padding: 2.25rem 0 2.75rem;">
-  <Container>
-    <div
-      class="card"
-      style="padding: 1.1rem; background: rgba(255,255,255,.04);"
-    >
-      <div
-        style="display:flex; gap:1rem; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;"
-      >
-        <div>
-          <div style="font-weight:900;">{clinic.name}</div>
-          <div class="muted" style="margin-top:.2rem;">{clinic.tagline}</div>
-          <div class="muted" style="margin-top:.6rem; max-width: 70ch;">
-            {clinic.address}
+<footer class="mt-16 bg-brand-900 text-white border-t border-brand-700">
+  <div class="container py-12">
+    <!-- Top row -->
+    <div class="grid gap-8 md:grid-cols-3">
+      <!-- Brand / description -->
+      <div>
+        <div class="flex items-center gap-3">
+          <!-- Logo placeholder (swap with real logo) -->
+          <div
+            class="bg-white/10 w-12 h-12 rounded-2xl grid place-items-center"
+          >
+            <span class="font-extrabold text-lg">F</span>
+          </div>
+          <div>
+            <div class="font-extrabold leading-none">{clinic.name}</div>
+            <div class="text-white/70 text-sm">{clinic.tagline}</div>
           </div>
         </div>
 
-        <div
-          style="display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end;"
-        >
-          <a class="chip" href="#servicos">Serviços</a>
-          <a class="chip" href="#equipa">Equipa</a>
-          <a class="chip" href="#contactos">Contactos</a>
-        </div>
+        <p class="mt-4 text-white/70 text-sm max-w-sm">
+          Cuidados especializados em fisioterapia e osteopatia, com
+          acompanhamento individualizado e foco na recuperação funcional.
+        </p>
       </div>
 
-      <div class="divider"></div>
+      <!-- Contact info -->
+      <div>
+        <h3 class="font-semibold text-sm uppercase tracking-wide text-white/80">
+          Contactos
+        </h3>
 
-      <div
-        class="muted"
-        style="display:flex; gap:.75rem; flex-wrap:wrap; justify-content:space-between;"
-      >
-        <span>© {year} {clinic.name}</span>
-        <span>
-          <a href={`tel:${clinic.phoneE164}`} style="text-decoration:none;"
-            >{clinic.phoneDisplay}</a
-          >
-          {" • "}
-          <a href={`mailto:${clinic.email}`} style="text-decoration:none;"
-            >{clinic.email}</a
-          >
-        </span>
+        <ul class="mt-4 space-y-2 text-sm text-white/70">
+          <li>{clinic.address}</li>
+          <li>
+            <a
+              href={`tel:${clinic.phoneE164}`}
+              class="text-white/70 hover:text-white"
+            >
+              {clinic.phoneDisplay}
+            </a>
+          </li>
+          <li>
+            <a
+              href={`mailto:${clinic.email}`}
+              class="text-white/70 hover:text-white"
+            >
+              {clinic.email}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Navigation -->
+      <div>
+        <h3 class="font-semibold text-sm uppercase tracking-wide text-white/80">
+          Navegação
+        </h3>
+
+        <ul class="mt-4 space-y-2 text-sm">
+          <li>
+            <a href="#servicos" class="text-white/70 hover:text-white">
+              Serviços
+            </a>
+          </li>
+          <li>
+            <a href="#equipa" class="text-white/70 hover:text-white">
+              Equipa
+            </a>
+          </li>
+          <li>
+            <a href="#contactos" class="text-white/70 hover:text-white">
+              Contactos
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
-  </Container>
+
+    <!-- Divider -->
+    <div
+      class="mt-10 border-t border-white/15 pt-6 flex flex-col md:flex-row gap-4 items-center justify-between text-sm text-white/60"
+    >
+      <span>© {year} {clinic.name}. Todos os direitos reservados.</span>
+
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-white">Política de Privacidade</a>
+        <a href="#" class="hover:text-white">Termos</a>
+      </div>
+    </div>
+  </div>
 </footer>

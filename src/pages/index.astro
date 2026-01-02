@@ -1,12 +1,10 @@
 ---
 import BaseLayout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import ContactStrip from "../components/ContactStrip.astro";
 import Services from "../components/Services.astro";
 import Team from "../components/Team.astro";
-import MapCard from "../components/MapCard.astro";
+import ContactAndLocation from "../components/ContactAndLocation.astro";
 import Footer from "../components/Footer.astro";
-import Container from "../components/Container.astro";
 ---
 
 <BaseLayout
@@ -14,27 +12,11 @@ import Container from "../components/Container.astro";
   description="Fisioterapia de reabilitação, terapia manual avançada, exercício clínico, fisioterapia e osteopatia infantil e osteopatia — Castêlo da Maia."
 >
   <Hero />
-  <ContactStrip />
 
   <main>
     <Services />
-
-    <Container>
-      <div
-        class="card"
-        style="padding: 1.25rem; margin: .25rem 0 1.25rem; background: rgba(255,255,255,.045);"
-      >
-        <h2>Como trabalhamos</h2>
-        <p class="muted" style="margin:.6rem 0 0; max-width: 80ch;">
-          Avaliação inicial, definição de objetivos e plano personalizado.
-          Acompanhamos a evolução e ajustamos o tratamento conforme a resposta
-          do seu corpo, sempre com foco em função, dor e qualidade de vida.
-        </p>
-      </div>
-    </Container>
-
     <Team />
-    <MapCard imageSrc="/images/map-placeholder.jpg" />
+    <ContactAndLocation imageSrc="google_maps_screenshot.png" />
   </main>
 
   <Footer />
