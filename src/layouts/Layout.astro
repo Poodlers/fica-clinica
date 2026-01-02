@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import ScrollToTop from "../components/ScrollToTop.astro";
 const { title, description } = Astro.props as {
   title: string;
   description?: string;
@@ -22,5 +23,45 @@ const desc = description ?? "Fisioterapia e Osteopatia — Maia";
 
   <body class="bg-brand-wash">
     <slot />
+    <ScrollToTop />
+    <script is:inline>
+      (() => {
+        const reveal = () => {
+          const els = Array.from(document.querySelectorAll("[data-reveal]"));
+          if (!els.length) return;
+
+          // If reduced motion, just show everything
+          const reduce = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches;
+          if (reduce) {
+            els.forEach((el) => el.classList.add("is-revealed"));
+            return;
+          }
+
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("is-revealed");
+                  io.unobserve(entry.target);
+                }
+              }
+            },
+            {
+              root: null,
+              threshold: 0.12,
+              rootMargin: "0px 0px -10% 0px",
+            }
+          );
+
+          els.forEach((el) => io.observe(el));
+        };
+
+        // Run now + on Astro client navigations (if you ever enable view transitions)
+        reveal();
+        document.addEventListener("astro:page-load", reveal);
+      })();
+    </script>
   </body>
 </html>

@@ -1,17 +1,17 @@
 ---
+import { Image } from "astro:assets";
 import { clinic } from "../data/clinic";
+import gmapsImg from "../assets/google_maps_screenshot.png";
 
 const whatsappText = encodeURIComponent(
   "Olá! Gostaria de marcar uma consulta."
 );
 const whatsappLink = `https://wa.me/${clinic.phoneE164.replace("+", "")}?text=${whatsappText}`;
 
-const { imageSrc, alt } = Astro.props as { imageSrc?: string; alt?: string };
-const src = imageSrc ?? "/images/map-placeholder.jpg";
-const imgAlt = alt ?? "Mapa (substituir por screenshot do Google Maps)";
+const imgAlt = "Mapa";
 ---
 
-<section id="contactos" class="section">
+<section id="contactos" class="section" data-reveal>
   <div class="container">
     <div class="section-head text-center">
       <h2 class="text-balance">Contactos & Localização</h2>
@@ -83,8 +83,8 @@ const imgAlt = alt ?? "Mapa (substituir por screenshot do Google Maps)";
         aria-label="Abrir localização no Google Maps"
       >
         <div class="relative">
-          <img
-            src={src}
+          <Image
+            src={gmapsImg}
             alt={imgAlt}
             loading="lazy"
             class="w-full h-[360px] md:h-[420px] object-cover"

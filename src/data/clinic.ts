@@ -3,6 +3,7 @@ import type { TeamMember } from "../types/team";
 export const clinic = {
   name: "Clínica FICA",
   tagline: "Fisioterapia Integrada Corpo Ativo",
+  addressShort: "Castêlo da Maia, Maia",
   address:
     "Via Eng Belmiro Mendes de Azevedo n353, 4475-401 Castêlo da Maia, Maia",
   phoneDisplay: "914 710 359",

@@ -1,0 +1,66 @@
+<button
+  type="button"
+  aria-label="Voltar ao topo"
+  data-scroll-top
+  class="fixed bottom-5 right-5 md:bottom-7 md:right-7 z-9999
+    btn-secondary px-4! py-3!
+    shadow-[0_14px_30px_rgba(23,27,48,0.18)]
+    ring-1 ring-slateLogo-400/25
+    opacity-0 pointer-events-none
+    translate-y-3 scale-90
+    transition-[opacity,transform] duration-200 ease-out"
+>
+  ↑
+</button>
+
+<script is:inline>
+  (() => {
+    const btn = document.querySelector("[data-scroll-top]");
+    if (!btn) return;
+
+    const SHOW_AFTER = 260; // px
+
+    const show = () => {
+      btn.classList.remove(
+        "opacity-0",
+        "pointer-events-none",
+        "translate-y-3",
+        "scale-90"
+      );
+      btn.classList.add("opacity-100", "translate-y-0", "scale-100");
+    };
+
+    const hide = () => {
+      btn.classList.add(
+        "opacity-0",
+        "pointer-events-none",
+        "translate-y-3",
+        "scale-90"
+      );
+      btn.classList.remove("opacity-100", "translate-y-0", "scale-100");
+    };
+
+    const onScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      if (y > SHOW_AFTER) show();
+      else hide();
+    };
+
+    // Pop-in ao longo do scroll: suaviza updates com rAF
+    let raf = 0;
+    const onScrollRaf = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(onScroll);
+    };
+
+    window.addEventListener("scroll", onScrollRaf, { passive: true });
+    window.addEventListener("resize", onScrollRaf);
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // init
+    onScroll();
+  })();
+</script>

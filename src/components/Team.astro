@@ -3,7 +3,7 @@ import { clinic } from "../data/clinic";
 import TeamMemberCard from "./TeamMemberCard.astro";
 ---
 
-<section id="equipa" class="section">
+<section id="equipa" class="section" data-reveal>
   <div class="container">
     <div class="section-head text-center">
       <h2 class="text-balance">Equipa</h2>
@@ -13,24 +13,22 @@ import TeamMemberCard from "./TeamMemberCard.astro";
     </div>
   </div>
 
-  <div class="relative w-full group" data-team-carousel>
-    <!-- Track -->
+  <div class="relative w-full group" data-embla-root>
+    <!-- Track / viewport -->
     <div
-      data-carousel-track
-      tabindex="0"
-      class="overflow-x-auto scroll-smooth
-        snap-x snap-mandatory
-        px-4 sm:px-6 md:px-10
-        [-ms-overflow-style:none]
-        [scrollbar-width:none]
-        [&::-webkit-scrollbar]:hidden"
+      class="overflow-hidden
+        px-4 sm:px-6 md:px-10"
+      data-embla-viewport
     >
-      <div class="flex gap-4 md:gap-6 py-2">
+      <div class="flex gap-4 md:gap-6" data-embla-container>
         {
-          clinic.team.map((member, i) => (
+          clinic.team.map((member) => (
             <div
-              class="snap-start shrink-0 basis-full md:basis-1/2"
-              data-carousel-item={String(i)}
+              class="
+              shrink-0
+              basis-full md:basis-1/2
+            "
+              data-embla-slide
             >
               <TeamMemberCard member={member} />
             </div>
@@ -39,184 +37,107 @@ import TeamMemberCard from "./TeamMemberCard.astro";
       </div>
     </div>
 
-    <!-- CLICKABLE OVERLAY LAYER -->
-    <div class="pointer-events-none absolute inset-0 z-[9999]">
+    <!-- Buttons -->
+    <div class="pointer-events-none absolute inset-0 z-20">
       <button
         type="button"
-        aria-label="Anterior"
-        data-carousel-prev
         class="pointer-events-auto
-      absolute left-3 sm:left-5 md:left-7 top-1/2 -translate-y-1/2
-      btn-secondary !px-3 !py-2.5
-      opacity-100 md:opacity-0 md:group-hover:opacity-100
-      transition-opacity"
+          absolute left-3 sm:left-5 md:left-7 top-1/2 -translate-y-1/2
+          btn-secondary px-3! py-2.5!
+          opacity-100 md:opacity-0 md:group-hover:opacity-100
+          transition-opacity"
+        data-embla-prev
+        aria-label="Anterior"
       >
         ←
       </button>
 
       <button
         type="button"
-        aria-label="Seguinte"
-        data-carousel-next
         class="pointer-events-auto
-      absolute right-3 sm:right-5 md:right-7 top-1/2 -translate-y-1/2
-      btn-secondary !px-3 !py-2.5
-      opacity-100 md:opacity-0 md:group-hover:opacity-100
-      transition-opacity"
+          absolute right-3 sm:right-5 md:right-7 top-1/2 -translate-y-1/2
+          btn-secondary px-3! py-2.5!
+          opacity-100 md:opacity-0 md:group-hover:opacity-100
+          transition-opacity"
+        data-embla-next
+        aria-label="Seguinte"
       >
         →
       </button>
     </div>
 
-    <!-- Page dots container (JS renders them) -->
-    <div class="mt-4 flex items-center justify-center gap-2" data-carousel-dots>
+    <!-- Dots -->
+    <div class="mt-4 flex items-center justify-center gap-2" data-embla-dots>
     </div>
 
-    <script is:inline>
-      (() => {
-        const init = () => {
-          const root = document.querySelector("[data-team-carousel]");
-          if (!root) return;
+    <script>
+      import EmblaCarousel from "embla-carousel";
 
-          const track = root.querySelector("[data-carousel-track]");
-          const prev = root.querySelector("[data-carousel-prev]");
-          const next = root.querySelector("[data-carousel-next]");
-          const dotsContainer = root.querySelector("[data-carousel-dots]");
-          const items = Array.from(
-            root.querySelectorAll("[data-carousel-item]")
-          );
+      const initEmbla = () => {
+        const root = document.querySelector("[data-embla-root]");
+        if (!root) return;
 
-          if (!track || !prev || !next || !dotsContainer || items.length === 0)
-            return;
+        const viewport = root.querySelector("[data-embla-viewport]");
+        const prevBtn = root.querySelector("[data-embla-prev]");
+        const nextBtn = root.querySelector("[data-embla-next]");
+        const dotsWrap = root.querySelector("[data-embla-dots]");
+        if (!viewport || !prevBtn || !nextBtn || !dotsWrap) return;
 
-          const perView = () =>
-            window.matchMedia("(min-width: 768px)").matches ? 2 : 1;
+        // Destroy previous instance (HMR-safe)
+        if ((root as any).__embla) (root as any).__embla.destroy();
 
-          // Compute each item's left offset relative to the track scroll container
-          const itemLefts = () => items.map((el) => el.offsetLeft);
+        const embla = EmblaCarousel(viewport as HTMLElement, {
+          loop: true, // wrap behaviour
+          align: "start",
+        });
 
-          const currentIndex = () => {
-            const lefts = itemLefts();
-            const x = track.scrollLeft;
-            let best = 0;
-            let bestDist = Infinity;
+        (root as any).__embla = embla;
 
-            for (let i = 0; i < lefts.length; i++) {
-              const d = Math.abs(lefts[i] - x);
-              if (d < bestDist) {
-                bestDist = d;
-                best = i;
-              }
-            }
-            return best;
-          };
+        // Buttons
+        prevBtn.addEventListener("click", () => embla.scrollPrev());
+        nextBtn.addEventListener("click", () => embla.scrollNext());
 
-          const scrollToIndex = (idx) => {
-            const lefts = itemLefts();
-            const clamped =
-              ((idx % items.length) + items.length) % items.length; // safe mod
-            track.scrollTo({ left: lefts[clamped], behavior: "smooth" });
-          };
+        // Dots (pages)
+        const renderDots = () => {
+          dotsWrap.innerHTML = "";
+          const snaps = embla.scrollSnapList();
 
-          const scrollBy = (dir) => {
-            const step = perView();
-            const i = currentIndex();
-            console.log("current index:", i);
-
-            const target = i + dir * step;
-            console.log("scrolling to index:", target);
-            scrollToIndex(target);
-          };
-
-          // ----- Page dots (pages, not items) -----
-          const pageCount = () =>
-            Math.max(1, Math.ceil(items.length / perView()));
-
-          const pageIndexFromItem = (itemIdx) =>
-            Math.floor(itemIdx / perView());
-
-          const renderDots = () => {
-            dotsContainer.innerHTML = "";
-            const pc = pageCount();
-
-            for (let p = 0; p < pc; p++) {
-              const dot = document.createElement("button");
-              dot.type = "button";
-              dot.className =
-                "h-2.5 w-2.5 rounded-full bg-brand-700/25 hover:bg-brand-700/40 transition";
-              dot.setAttribute("aria-label", `Ir para página ${p + 1}`);
-              dot.addEventListener("click", (e) => {
-                e.preventDefault();
-                scrollToIndex(p * perView());
-              });
-              dotsContainer.appendChild(dot);
-            }
-          };
-
-          const updateActiveDot = () => {
-            const idx = currentIndex();
-            const currentPage = pageIndexFromItem(idx);
-            const dots = Array.from(dotsContainer.querySelectorAll("button"));
-
-            dots.forEach((dot, i) => {
-              const active = i === currentPage;
-              dot.classList.toggle("bg-brand-700/70", active);
-              dot.classList.toggle("bg-brand-700/25", !active);
-              dot.classList.toggle("scale-125", active);
-              dot.setAttribute("aria-current", active ? "true" : "false");
-            });
-          };
-
-          // Events (use pointerdown to avoid scroll-container click weirdness)
-          prev.addEventListener(
-            "pointerdown",
-            (e) => {
-              console.log("prev clicked");
-              e.preventDefault();
-              scrollBy(-1);
-            },
-            { passive: false }
-          );
-
-          next.addEventListener(
-            "pointerdown",
-            (e) => {
-              e.preventDefault();
-              scrollBy(1);
-            },
-            { passive: false }
-          );
-
-          // Sync active dot on scroll
-          let raf = 0;
-          const onScroll = () => {
-            cancelAnimationFrame(raf);
-            raf = requestAnimationFrame(updateActiveDot);
-          };
-
-          track.addEventListener("scroll", onScroll, { passive: true });
-
-          window.addEventListener("resize", () => {
-            renderDots();
-            // keep current page aligned to nearest item after resize
-            scrollToIndex(currentIndex());
-            updateActiveDot();
+          snaps.forEach((_, i) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className =
+              "h-2.5 w-2.5 rounded-full bg-brand-700/25 hover:bg-brand-700/40 transition";
+            b.setAttribute("aria-label", `Ir para página ${i + 1}`);
+            b.addEventListener("click", () => embla.scrollTo(i));
+            dotsWrap.appendChild(b);
           });
-
-          // Keyboard support
-          track.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowLeft") scrollBy(-1);
-            if (e.key === "ArrowRight") scrollBy(1);
-          });
-
-          // Init
-          renderDots();
-          updateActiveDot();
         };
 
-        init();
-        document.addEventListener("astro:page-load", init);
-      })();
+        const setActiveDot = () => {
+          const index = embla.selectedScrollSnap();
+          const dots = dotsWrap.querySelectorAll("button");
+          dots.forEach((d, i) => {
+            const active = i === index;
+            d.classList.toggle("bg-brand-700/70", active);
+            d.classList.toggle("bg-brand-700/25", !active);
+            d.classList.toggle("scale-125", active);
+            d.setAttribute("aria-current", active ? "true" : "false");
+          });
+        };
+
+        renderDots();
+        setActiveDot();
+
+        embla.on("select", setActiveDot);
+        embla.on("reInit", () => {
+          renderDots();
+          setActiveDot();
+        });
+      };
+
+      initEmbla();
+      // If you ever enable Astro view transitions, this ensures it re-inits on navigations
+      document.addEventListener("astro:page-load", initEmbla);
     </script>
   </div>
 </section>
