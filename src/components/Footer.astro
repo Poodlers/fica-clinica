@@ -1,0 +1,53 @@
+---
+import Container from "./Container.astro";
+import { clinic } from "../data/clinic";
+
+const year = new Date().getFullYear();
+---
+
+<footer style="padding: 2.25rem 0 2.75rem;">
+  <Container>
+    <div
+      class="card"
+      style="padding: 1.1rem; background: rgba(255,255,255,.04);"
+    >
+      <div
+        style="display:flex; gap:1rem; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;"
+      >
+        <div>
+          <div style="font-weight:900;">{clinic.name}</div>
+          <div class="muted" style="margin-top:.2rem;">{clinic.tagline}</div>
+          <div class="muted" style="margin-top:.6rem; max-width: 70ch;">
+            {clinic.address}
+          </div>
+        </div>
+
+        <div
+          style="display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end;"
+        >
+          <a class="chip" href="#servicos">Serviços</a>
+          <a class="chip" href="#equipa">Equipa</a>
+          <a class="chip" href="#contactos">Contactos</a>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div
+        class="muted"
+        style="display:flex; gap:.75rem; flex-wrap:wrap; justify-content:space-between;"
+      >
+        <span>© {year} {clinic.name}</span>
+        <span>
+          <a href={`tel:${clinic.phoneE164}`} style="text-decoration:none;"
+            >{clinic.phoneDisplay}</a
+          >
+          {" • "}
+          <a href={`mailto:${clinic.email}`} style="text-decoration:none;"
+            >{clinic.email}</a
+          >
+        </span>
+      </div>
+    </div>
+  </Container>
+</footer>

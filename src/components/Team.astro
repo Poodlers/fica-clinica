@@ -1,0 +1,18 @@
+---
+import Section from "./Section.astro";
+import Container from "./Container.astro";
+import { clinic } from "../data/clinic";
+import TeamMemberCard from "./TeamMemberCard.astro";
+---
+
+<Section
+  id="equipa"
+  title="Equipa"
+  subtitle="Profissionais com formação especializada para apoiar a sua recuperação."
+>
+  <Container>
+    <div class="grid two">
+      {clinic.team.map((member) => <TeamMemberCard member={member} />)}
+    </div>
+  </Container>
+</Section>

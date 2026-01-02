@@ -1,0 +1,43 @@
+---
+import type { TeamMember } from "../types/team";
+
+const { member } = Astro.props as { member: TeamMember };
+---
+
+<article
+  class="card"
+  style="padding: 1.1rem; background: rgba(255,255,255,.05);"
+>
+  <div style="display:flex; align-items:flex-start; gap:.85rem;">
+    <div
+      class="card"
+      style="width:46px; height:46px; border-radius: 16px; display:grid; place-items:center; background: rgba(255,255,255,.08); flex:0 0 auto;"
+    >
+      <span style="font-weight:900;">
+        {
+          member.name
+            .split(" ")
+            .map((p) => p[0])
+            .slice(0, 2)
+            .join("")
+        }
+      </span>
+    </div>
+    <div style="min-width:0;">
+      <div style="font-weight:900;">{member.name}</div>
+      <div class="muted" style="margin-top:.1rem;">
+        {member.role} • {member.license}
+      </div>
+    </div>
+  </div>
+
+  <ul style="margin: .85rem 0 0; padding-left: 1.05rem;">
+    {
+      member.qualifications.map((q) => (
+        <li class="muted" style="margin:.35rem 0;">
+          {q}
+        </li>
+      ))
+    }
+  </ul>
+</article>

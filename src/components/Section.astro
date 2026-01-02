@@ -1,0 +1,25 @@
+---
+const { title, id, subtitle } = Astro.props as {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+};
+---
+
+<section id={id} style="padding: 2.75rem 0;">
+  <slot name="head">
+    {
+      title && (
+        <div style="margin-bottom: 1.25rem;">
+          <h2>{title}</h2>
+          {subtitle && (
+            <p class="muted" style="margin:.45rem 0 0; max-width: 70ch;">
+              {subtitle}
+            </p>
+          )}
+        </div>
+      )
+    }
+  </slot>
+  <slot />
+</section>

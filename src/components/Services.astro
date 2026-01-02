@@ -1,0 +1,29 @@
+---
+import Section from "./Section.astro";
+import Container from "./Container.astro";
+import { clinic } from "../data/clinic";
+---
+
+<Section
+  id="servicos"
+  title="Serviços"
+  subtitle="Intervenções baseadas em evidência, com foco na sua recuperação e bem-estar."
+>
+  <Container>
+    <div class="grid three">
+      {
+        clinic.services.map((s) => (
+          <div
+            class="card"
+            style="padding: 1.1rem; background: rgba(255,255,255,.05);"
+          >
+            <div style="font-weight:800;">{s}</div>
+            <div class="muted" style="margin-top:.4rem; font-size:.95rem;">
+              Acompanhamento individualizado e plano ajustado ao seu caso.
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</Section>
