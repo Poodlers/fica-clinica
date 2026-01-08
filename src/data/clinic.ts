@@ -1,7 +1,7 @@
 import type { TeamMember } from "../types/team";
 
 export const clinic = {
-  name: "Clínica FICA",
+  name: "Gabinete FICA",
   tagline: "Fisioterapia Integrada Corpo Ativo",
   addressShort: "Castêlo da Maia, Maia",
   address:
@@ -15,7 +15,7 @@ export const clinic = {
   ],
   services: [
     "Fisioterapia de reabilitação",
-    "Terapia Manual Avançada",
+    "Fisioterapia e Terapia Manual Avançada",
     "Exercício clínico",
     "Fisioterapia e Osteopatia infantil",
     "Osteopatia",

@@ -8,18 +8,15 @@ import { clinic } from "../data/clinic";
       <h2 class="text-balance">Serviços</h2>
       <p class="subtitle mx-auto">
         Intervenções baseadas em evidência, com foco na sua recuperação e
-        bem-estar.
+        bem-estar. Acompanhamento individualizado e plano ajustado ao seu caso.
       </p>
     </div>
 
     <div class="grid gap-4 md:grid-cols-3">
       {
         clinic.services.map((s) => (
-          <div class="card p-6">
-            <div class="font-semibold text-brand-900">{s}</div>
-            <p class="mt-2 text-sm text-brand-700/80">
-              Acompanhamento individualizado e plano ajustado ao seu caso.
-            </p>
+          <div class="card p-6 text-center flex items-center justify-center">
+            <div class="font-semibold text-lg text-brand-900">{s}</div>
           </div>
         ))
       }
