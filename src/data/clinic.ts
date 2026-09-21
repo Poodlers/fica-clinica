@@ -1,7 +1,7 @@
 import type { TeamMember } from "../types/team";
 
 export const clinic = {
-  name: "Gabinete FICA",
+  name: "FICA",
   tagline: "Fisioterapia Integrada Corpo Ativo",
   addressShort: "Castêlo da Maia, Maia",
   address:
@@ -12,6 +12,7 @@ export const clinic = {
   legal: {
     establishmentRegistration: "E180160",
     operatingLicense: "26540/2025",
+    nipc: 519082818,
   },
   hours: [
     { label: "Segunda a Sexta", value: "8h - 20h (sob marcação)" },
@@ -40,7 +41,7 @@ export const clinic = {
     {
       name: "Ana Gabriela Ribeiro",
       role: "Fisioterapeuta",
-      image: "ana_gabriela.jpeg",
+      image: "ana_gabriela.jpg",
       license: "nº 2494",
       qualifications: [
         "Pós-graduação em exercício terapêutico (ISMAT / Fitness Academy)",
@@ -51,7 +52,7 @@ export const clinic = {
     {
       name: "Ana Sofia Carvalho Marques",
       role: "Osteopata",
-      image: "colaboradora_3.jpeg",
+      image: "colaboradora_3.jpg",
       license: "nº 0032625",
       qualifications: [
         "Massagem Desportiva pela AFP",

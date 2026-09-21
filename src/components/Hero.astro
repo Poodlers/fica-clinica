@@ -5,7 +5,7 @@ import { Image } from "astro:assets";
 import ThemeSelector from "./ThemeSelector.astro";
 
 const whatsappText = encodeURIComponent(
-  "Olá! Gostaria de marcar uma consulta."
+  "Olá! Gostaria de marcar uma consulta.",
 );
 const whatsappLink = `https://wa.me/${clinic.phoneE164.replace("+", "")}?text=${whatsappText}`;
 const mapsLink = clinic.mapsLink;
@@ -107,7 +107,7 @@ const mapsLink = clinic.mapsLink;
           </h1>
 
           <p class="mt-4 text-muted max-w-xl mx-auto md:mx-0">
-            Reabilitação, terapia manual e exercício clínico — com foco no seu
+            Reabilitação, terapia manual e exercício clínico com foco no seu
             objetivo e na sua recuperação.
           </p>
 
@@ -157,9 +157,7 @@ const mapsLink = clinic.mapsLink;
         </div>
 
         <div class="text-center sm:text-left">
-          <div class="text-xs font-semibold text-muted">
-            Resposta rápida
-          </div>
+          <div class="text-xs font-semibold text-muted">Resposta rápida</div>
           <div class="mt-2 font-semibold text-heading">WhatsApp</div>
           <div class="text-sm text-muted mt-1">Marcação e dúvidas</div>
         </div>
