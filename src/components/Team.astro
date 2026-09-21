@@ -11,133 +11,114 @@ import TeamMemberCard from "./TeamMemberCard.astro";
         Profissionais com formação especializada para apoiar a sua recuperação.
       </p>
     </div>
-  </div>
 
-  <div class="relative w-full group" data-embla-root>
-    <!-- Track / viewport -->
-    <div
-      class="overflow-hidden
-        px-4 sm:px-6 md:px-10"
-      data-embla-viewport
-    >
-      <div class="flex gap-4 md:gap-6" data-embla-container>
-        {
-          clinic.team.map((member) => (
-            <div
-              class="
-              shrink-0
-              basis-full md:basis-1/2
-            "
-              data-embla-slide
-            >
-              <TeamMemberCard member={member} />
-            </div>
-          ))
-        }
+    <div class="relative group" data-embla-root>
+      <div class="overflow-hidden" data-embla-viewport>
+        <div class="flex gap-4 md:gap-6" data-embla-container>
+          {
+            clinic.team.map((member) => (
+              <div
+                class="shrink-0 basis-full lg:basis-1/2"
+                data-embla-slide
+              >
+                <TeamMemberCard member={member} />
+              </div>
+            ))
+          }
+        </div>
       </div>
-    </div>
 
-    <!-- Buttons -->
-    <div class="pointer-events-none absolute inset-0 z-20">
-      <button
-        type="button"
-        class="pointer-events-auto
-          absolute left-3 sm:left-5 md:left-7 top-1/2 -translate-y-1/2
-          btn-secondary px-3! py-2.5!
-          opacity-100 md:opacity-0 md:group-hover:opacity-100
-          transition-opacity"
-        data-embla-prev
-        aria-label="Anterior"
-      >
-        ←
-      </button>
+      <div class="pointer-events-none absolute inset-0 z-20">
+        <button
+          type="button"
+          class="pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2
+            btn-secondary px-3! py-2.5!
+            opacity-100 md:opacity-0 md:group-hover:opacity-100
+            transition-opacity"
+          data-embla-prev
+          aria-label="Anterior"
+        >
+          ←
+        </button>
 
-      <button
-        type="button"
-        class="pointer-events-auto
-          absolute right-3 sm:right-5 md:right-7 top-1/2 -translate-y-1/2
-          btn-secondary px-3! py-2.5!
-          opacity-100 md:opacity-0 md:group-hover:opacity-100
-          transition-opacity"
-        data-embla-next
-        aria-label="Seguinte"
-      >
-        →
-      </button>
-    </div>
+        <button
+          type="button"
+          class="pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2
+            btn-secondary px-3! py-2.5!
+            opacity-100 md:opacity-0 md:group-hover:opacity-100
+            transition-opacity"
+          data-embla-next
+          aria-label="Seguinte"
+        >
+          →
+        </button>
+      </div>
 
-    <!-- Dots -->
-    <div class="mt-4 flex items-center justify-center gap-2" data-embla-dots>
-    </div>
+      <div class="mt-5 flex items-center justify-center gap-2" data-embla-dots>
+      </div>
 
-    <script>
-      import EmblaCarousel from "embla-carousel";
+      <script>
+        import EmblaCarousel from "embla-carousel";
 
-      const initEmbla = () => {
-        const root = document.querySelector("[data-embla-root]");
-        if (!root) return;
+        const initEmbla = () => {
+          const root = document.querySelector("[data-embla-root]");
+          if (!root) return;
 
-        const viewport = root.querySelector("[data-embla-viewport]");
-        const prevBtn = root.querySelector("[data-embla-prev]");
-        const nextBtn = root.querySelector("[data-embla-next]");
-        const dotsWrap = root.querySelector("[data-embla-dots]");
-        if (!viewport || !prevBtn || !nextBtn || !dotsWrap) return;
+          const viewport = root.querySelector("[data-embla-viewport]");
+          const prevBtn = root.querySelector("[data-embla-prev]");
+          const nextBtn = root.querySelector("[data-embla-next]");
+          const dotsWrap = root.querySelector("[data-embla-dots]");
+          if (!viewport || !prevBtn || !nextBtn || !dotsWrap) return;
 
-        // Destroy previous instance (HMR-safe)
-        if ((root as any).__embla) (root as any).__embla.destroy();
+          if ((root as any).__embla) (root as any).__embla.destroy();
 
-        const embla = EmblaCarousel(viewport as HTMLElement, {
-          loop: true, // wrap behaviour
-          align: "start",
-        });
-
-        (root as any).__embla = embla;
-
-        // Buttons
-        prevBtn.addEventListener("click", () => embla.scrollPrev());
-        nextBtn.addEventListener("click", () => embla.scrollNext());
-
-        // Dots (pages)
-        const renderDots = () => {
-          dotsWrap.innerHTML = "";
-          const snaps = embla.scrollSnapList();
-
-          snaps.forEach((_, i) => {
-            const b = document.createElement("button");
-            b.type = "button";
-            b.className =
-              "h-2.5 w-2.5 rounded-full bg-brand-700/25 hover:bg-brand-700/40 transition";
-            b.setAttribute("aria-label", `Ir para página ${i + 1}`);
-            b.addEventListener("click", () => embla.scrollTo(i));
-            dotsWrap.appendChild(b);
+          const embla = EmblaCarousel(viewport as HTMLElement, {
+            loop: true,
+            align: "start",
           });
-        };
 
-        const setActiveDot = () => {
-          const index = embla.selectedScrollSnap();
+          (root as any).__embla = embla;
+
+          prevBtn.addEventListener("click", () => embla.scrollPrev());
+          nextBtn.addEventListener("click", () => embla.scrollNext());
+
+          const renderDots = () => {
+            dotsWrap.innerHTML = "";
+            const snaps = embla.scrollSnapList();
+
+            snaps.forEach((_, i) => {
+              const b = document.createElement("button");
+              b.type = "button";
+              b.className = "embla-dot";
+              b.setAttribute("aria-label", `Ir para página ${i + 1}`);
+              b.addEventListener("click", () => embla.scrollTo(i));
+              dotsWrap.appendChild(b);
+            });
+          };
+
+          const setActiveDot = () => {
+            const index = embla.selectedScrollSnap();
           const dots = dotsWrap.querySelectorAll("button");
           dots.forEach((d, i) => {
             const active = i === index;
-            d.classList.toggle("bg-brand-700/70", active);
-            d.classList.toggle("bg-brand-700/25", !active);
-            d.classList.toggle("scale-125", active);
+            d.classList.toggle("is-active", active);
             d.setAttribute("aria-current", active ? "true" : "false");
           });
         };
 
-        renderDots();
-        setActiveDot();
-
-        embla.on("select", setActiveDot);
-        embla.on("reInit", () => {
           renderDots();
           setActiveDot();
-        });
-      };
 
-      initEmbla();
-      // If you ever enable Astro view transitions, this ensures it re-inits on navigations
-      document.addEventListener("astro:page-load", initEmbla);
-    </script>
+          embla.on("select", setActiveDot);
+          embla.on("reInit", () => {
+            renderDots();
+            setActiveDot();
+          });
+        };
+
+        initEmbla();
+        document.addEventListener("astro:page-load", initEmbla);
+      </script>
+    </div>
   </div>
 </section>

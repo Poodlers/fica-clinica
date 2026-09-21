@@ -4,15 +4,26 @@
 
 /* -------------------------------------------------------
    Tailwind v4 Theme Tokens (CSS-first)
-   This generates utilities like:
-   - bg-paper, text-ink
-   - bg-brand-600, text-brand-900
-   - bg-accent-200, etc.
 -------------------------------------------------------- */
 @theme {
-  /* Core neutrals from logo */
-  --color-paper: #ede8e6;
-  --color-ink: #1a1c21;
+  /* Semantic colors that are switched by the theme system */
+  --color-paper: var(--theme-page);
+  --color-surface: var(--theme-surface);
+  --color-ink: var(--theme-fg);
+  --color-page: var(--theme-page);
+  --color-panel: var(--theme-panel);
+  --color-panel-strong: var(--theme-panel-strong);
+  --color-heading: var(--theme-heading);
+  --color-fg: var(--theme-fg);
+  --color-muted: var(--theme-muted);
+  --color-line: var(--theme-line);
+  --color-nav: var(--theme-nav);
+  --color-primary: var(--theme-primary);
+  --color-primary-hover: var(--theme-primary-hover);
+  --color-primary-fg: var(--theme-primary-fg);
+  --color-accent-soft: var(--theme-accent-soft);
+  --color-footer: var(--theme-footer);
+  --color-footer-muted: var(--theme-footer-muted);
 
   /* Brand (logo navy ~ #3A4477) */
   --color-brand-50: #eff0f4;
@@ -42,9 +53,89 @@
   --color-slateLogo-400: #939dbc;
   --color-slateLogo-600: #606886;
 
-  /* Optional: radius tokens (lets you standardize rounding) */
-  --radius-xl: 1rem;
-  --radius-2xl: 1.25rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.5rem;
+}
+
+/* -------------------------------------------------------
+   Theme values
+-------------------------------------------------------- */
+:root,
+html[data-theme="light"] {
+  color-scheme: light;
+  --theme-page: #ede8e6;
+  --theme-surface: #fbfaf8;
+  --theme-panel: #f7f4f1;
+  --theme-panel-strong: #ffffff;
+  --theme-heading: #171b30;
+  --theme-fg: #1a1c21;
+  --theme-muted: #4c5369;
+  --theme-line: #dfe1e9;
+  --theme-nav: rgb(251 250 248 / 0.95);
+  --theme-primary: #313a65;
+  --theme-primary-hover: #293053;
+  --theme-primary-fg: #ffffff;
+  --theme-accent-soft: #f3f6e8;
+  --theme-footer: #171b30;
+  --theme-footer-muted: rgb(255 255 255 / 0.7);
+  --theme-card-shadow: 0 18px 42px rgb(23 27 48 / 0.08);
+  --theme-button-shadow: 0 10px 22px rgb(49 58 101 / 0.18);
+  --theme-float-shadow: 0 14px 30px rgb(23 27 48 / 0.18);
+  --theme-map-filter: none;
+  --theme-wash: linear-gradient(180deg, #fbfaf8 0%, #ede8e6 54%, #f9faf2 100%);
+  --theme-control-active: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: dark;
+    --theme-page: #111521;
+    --theme-surface: #151a28;
+    --theme-panel: #171d2d;
+    --theme-panel-strong: #1d2435;
+    --theme-heading: #f3f6e8;
+    --theme-fg: #e8e6df;
+    --theme-muted: #b4bccf;
+    --theme-line: #30384d;
+    --theme-nav: rgb(17 21 33 / 0.92);
+    --theme-primary: #c9d596;
+    --theme-primary-hover: #d8e1b3;
+    --theme-primary-fg: #171b30;
+    --theme-accent-soft: #252d33;
+    --theme-footer: #0d1120;
+    --theme-footer-muted: rgb(232 230 223 / 0.68);
+    --theme-card-shadow: 0 18px 48px rgb(0 0 0 / 0.26);
+    --theme-button-shadow: 0 10px 24px rgb(0 0 0 / 0.24);
+    --theme-float-shadow: 0 14px 30px rgb(0 0 0 / 0.32);
+    --theme-map-filter: brightness(0.82) saturate(0.9);
+    --theme-wash: linear-gradient(180deg, #151a28 0%, #111521 58%, #141a20 100%);
+    --theme-control-active: #293053;
+  }
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --theme-page: #111521;
+  --theme-surface: #151a28;
+  --theme-panel: #171d2d;
+  --theme-panel-strong: #1d2435;
+  --theme-heading: #f3f6e8;
+  --theme-fg: #e8e6df;
+  --theme-muted: #b4bccf;
+  --theme-line: #30384d;
+  --theme-nav: rgb(17 21 33 / 0.92);
+  --theme-primary: #c9d596;
+  --theme-primary-hover: #d8e1b3;
+  --theme-primary-fg: #171b30;
+  --theme-accent-soft: #252d33;
+  --theme-footer: #0d1120;
+  --theme-footer-muted: rgb(232 230 223 / 0.68);
+  --theme-card-shadow: 0 18px 48px rgb(0 0 0 / 0.26);
+  --theme-button-shadow: 0 10px 24px rgb(0 0 0 / 0.24);
+  --theme-float-shadow: 0 14px 30px rgb(0 0 0 / 0.32);
+  --theme-map-filter: brightness(0.82) saturate(0.9);
+  --theme-wash: linear-gradient(180deg, #151a28 0%, #111521 58%, #141a20 100%);
+  --theme-control-active: #293053;
 }
 
 /* -------------------------------------------------------
@@ -53,27 +144,34 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
 
   body {
-    @apply bg-paper text-ink antialiased;
+    @apply bg-page text-fg antialiased;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply text-brand-900 tracking-tight;
+    @apply text-heading;
+    letter-spacing: 0;
   }
 
   h1 {
-    @apply text-4xl md:text-5xl font-extrabold leading-tight;
+    @apply text-4xl md:text-5xl font-bold leading-[1.08];
   }
+
   h2 {
-    @apply text-2xl md:text-3xl font-bold leading-snug;
+    @apply text-2xl md:text-3xl font-semibold leading-tight;
   }
+
   h3 {
-    @apply text-lg md:text-xl font-semibold;
+    @apply text-lg md:text-xl font-semibold leading-snug;
   }
 
   p {
@@ -81,7 +179,19 @@
   }
 
   a {
-    @apply text-brand-700 hover:text-brand-900 transition-colors;
+    @apply text-primary transition-colors duration-200;
+  }
+
+  a:hover {
+    @apply text-primary-hover;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    @apply outline-none ring-2 ring-accent-400 ring-offset-2 ring-offset-page;
   }
 
   ::selection {
@@ -94,90 +204,97 @@
 -------------------------------------------------------- */
 @layer components {
   .container {
-    @apply mx-auto max-w-6xl px-4;
+    @apply mx-auto max-w-6xl px-5 sm:px-6 lg:px-8;
   }
 
   .section {
-    @apply py-12 md:py-16;
+    @apply py-14 md:py-20;
   }
 
   .section-head {
-    @apply mb-6 md:mb-8;
+    @apply mb-8 md:mb-10;
   }
 
   .subtitle {
-    @apply mt-2 text-sm md:text-base text-brand-700/80 max-w-2xl;
+    @apply mt-3 text-base text-muted max-w-2xl;
   }
 
   .card {
-    @apply rounded-2xl bg-white/70 backdrop-blur
-           ring-1 ring-slateLogo-400/25
-           shadow-[0_12px_30px_rgba(23,27,48,0.10)];
+    @apply rounded-lg bg-panel-strong ring-1 ring-line;
+    box-shadow: var(--theme-card-shadow);
   }
 
   .card-soft {
-    @apply rounded-2xl bg-white/50 backdrop-blur
-           ring-1 ring-slateLogo-400/20;
+    @apply rounded-lg bg-panel ring-1 ring-line;
   }
 
-  .btn {
-    @apply inline-flex items-center justify-center gap-2
-           rounded-full px-5 py-2.5 text-sm font-semibold
-           transition-transform transition-colors
-           active:scale-[0.98] focus:outline-none
-           focus-visible:ring-2 focus-visible:ring-accent-300
-           focus-visible:ring-offset-2 focus-visible:ring-offset-paper;
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    @apply inline-flex min-h-11 items-center justify-center gap-2
+           rounded-lg px-5 py-2.5 text-sm font-semibold
+           transition duration-200 ease-out
+           active:translate-y-px;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2
-           rounded-full px-5 py-2.5 text-sm font-semibold
-           bg-brand-600 text-white
-           hover:bg-brand-700
-           transition-transform transition-colors
-           active:scale-[0.98]
-           focus:outline-none
-           focus-visible:ring-2 focus-visible:ring-accent-300
-           focus-visible:ring-offset-2 focus-visible:ring-offset-paper;
+    @apply bg-primary text-primary-fg
+           hover:-translate-y-0.5 hover:bg-primary-hover hover:text-primary-fg;
+    box-shadow: var(--theme-button-shadow);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2
-           rounded-full px-5 py-2.5 text-sm font-semibold
-           bg-white/60 text-brand-900
-           ring-1 ring-slateLogo-400/30
-           hover:bg-white/80
-           transition-transform transition-colors;
+    @apply bg-panel-strong text-heading ring-1 ring-line
+           hover:-translate-y-0.5 hover:bg-panel hover:text-heading;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2
-           rounded-full px-5 py-2.5 text-sm font-semibold
-           bg-white/60 
-           ring-1 ring-slateLogo-400/30
-           transition-transform transition-colors bg-transparent text-brand-800 hover:bg-brand-50;
+    @apply bg-transparent text-heading hover:bg-panel hover:text-heading;
+  }
+
+  .chip,
+  .chip-accent {
+    @apply inline-flex items-center gap-2 rounded-lg px-3 py-1.5
+           text-xs font-medium ring-1;
   }
 
   .chip {
-    @apply inline-flex items-center gap-2
-           rounded-full px-3 py-1 text-xs font-medium
-           bg-white/60 text-brand-800
-           ring-1 ring-slateLogo-400/25;
+    @apply bg-panel text-heading ring-line;
   }
 
   .chip-accent {
-    @apply inline-flex items-center gap-2
-           rounded-full px-3 py-1 text-xs font-medium
-           bg-white/60 
-           ring-1 ring-slateLogo-400/25 bg-accent-200/70 text-brand-900 ring-accent-300/50;
+    @apply bg-accent-soft text-heading ring-line;
   }
 
   .input {
-    @apply w-full rounded-xl bg-white/70
-           px-4 py-3 text-sm
-           ring-1 ring-slateLogo-400/25
-           placeholder:text-brand-700/50
-           focus:ring-2 focus:ring-accent-300 focus:outline-none;
+    @apply w-full rounded-lg bg-panel-strong px-4 py-3 text-sm
+           text-fg ring-1 ring-line placeholder:text-muted
+           focus:ring-2 focus:ring-accent-400 focus:outline-none;
+  }
+
+  .theme-selector {
+    @apply inline-flex items-center gap-1 rounded-lg bg-panel p-1 ring-1 ring-line;
+  }
+
+  .theme-option {
+    @apply inline-flex h-9 min-w-9 items-center justify-center gap-1.5 rounded-md
+           px-2 text-muted transition duration-200 hover:bg-panel-strong hover:text-heading;
+  }
+
+  .theme-option[aria-checked="true"] {
+    @apply text-heading shadow-[0_5px_14px_rgba(23,27,48,0.10)];
+    background: var(--theme-control-active);
+  }
+
+  .embla-dot {
+    @apply h-2.5 w-2.5 rounded-full bg-muted/35 transition
+           hover:bg-muted/55 focus-visible:ring-2 focus-visible:ring-accent-400
+           focus-visible:ring-offset-2 focus-visible:ring-offset-page;
+  }
+
+  .embla-dot.is-active {
+    @apply scale-125 bg-primary;
   }
 }
 
@@ -186,25 +303,21 @@
 -------------------------------------------------------- */
 @layer utilities {
   .bg-brand-wash {
-    background: radial-gradient(
-        900px 600px at 15% 0%,
-        color-mix(in srgb, var(--color-brand-500) 18%, transparent),
-        transparent 55%
-      ),
-      radial-gradient(
-        800px 520px at 90% 10%,
-        color-mix(in srgb, var(--color-accent-500) 22%, transparent),
-        transparent 55%
-      );
+    background: var(--theme-wash);
+  }
+
+  .theme-map {
+    filter: var(--theme-map-filter);
+    transition: filter 200ms ease;
   }
 
   .text-balance {
     text-wrap: balance;
   }
-  /* Reveal-on-scroll */
+
   [data-reveal] {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(12px);
     transition: opacity 500ms ease, transform 500ms ease;
     will-change: opacity, transform;
   }
@@ -214,33 +327,51 @@
     transform: translateY(0);
   }
 
-  /* Respect reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    [data-reveal] {
-      transition: none;
-      transform: none;
-      opacity: 1;
-    }
-  }
   [data-reveal-child] {
     opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 600ms ease, transform 600ms ease;
+    transform: translateY(8px);
+    transition: opacity 550ms ease, transform 550ms ease;
   }
+
   .is-revealed [data-reveal-child] {
     opacity: 1;
     transform: translateY(0);
   }
+
   .is-revealed [data-reveal-child]:nth-child(1) {
     transition-delay: 0ms;
   }
+
   .is-revealed [data-reveal-child]:nth-child(2) {
-    transition-delay: 80ms;
+    transition-delay: 70ms;
   }
+
   .is-revealed [data-reveal-child]:nth-child(3) {
-    transition-delay: 160ms;
+    transition-delay: 140ms;
   }
+
   .is-revealed [data-reveal-child]:nth-child(4) {
-    transition-delay: 240ms;
+    transition-delay: 210ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    [data-reveal],
+    [data-reveal-child] {
+      opacity: 1;
+      transform: none;
+    }
   }
 }

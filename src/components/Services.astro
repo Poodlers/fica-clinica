@@ -1,8 +1,15 @@
 ---
 import { clinic } from "../data/clinic";
+import Accessibility from "@lucide/astro/icons/accessibility";
+import Baby from "@lucide/astro/icons/baby";
+import Bone from "@lucide/astro/icons/bone";
+import Dumbbell from "@lucide/astro/icons/dumbbell";
+import HandHeart from "@lucide/astro/icons/hand-heart";
+
+const serviceIcons = [Accessibility, HandHeart, Dumbbell, Baby, Bone] as const;
 ---
 
-<section id="servicos" class="section" data-reveal>
+<section id="servicos" class="section bg-panel" data-reveal>
   <div class="container">
     <div class="section-head text-center">
       <h2 class="text-balance">Serviços</h2>
@@ -12,13 +19,28 @@ import { clinic } from "../data/clinic";
       </p>
     </div>
 
-    <div class="grid gap-4 md:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
-        clinic.services.map((s) => (
-          <div class="card p-6 text-center flex items-center justify-center">
-            <div class="font-semibold text-lg text-brand-900">{s}</div>
-          </div>
-        ))
+        clinic.services.map((s, index) => {
+          const Icon = serviceIcons[index];
+
+          return (
+            <article
+              class="card group flex min-h-44 flex-col items-center justify-center gap-5 p-6 text-center transition duration-200 hover:-translate-y-0.5 hover:bg-panel-strong"
+              data-reveal-child
+            >
+              <div
+                class="grid h-[4.5rem] w-[4.5rem] place-items-center rounded-lg bg-accent-soft text-primary ring-1 ring-line transition duration-200 group-hover:text-primary-hover group-hover:ring-accent-400"
+                aria-hidden="true"
+              >
+                <Icon class="h-9 w-9" stroke-width="1.8" />
+              </div>
+              <h3 class="max-w-64 text-base font-semibold text-heading">
+                {s}
+              </h3>
+            </article>
+          );
+        })
       }
     </div>
   </div>

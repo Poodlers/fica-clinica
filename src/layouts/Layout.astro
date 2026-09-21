@@ -5,7 +5,7 @@ const { title, description } = Astro.props as {
   title: string;
   description?: string;
 };
-const desc = description ?? "Fisioterapia e Osteopatia — Maia";
+const desc = description ?? "Gabinete FICA — Fisioterapia e Osteopatia na Maia";
 ---
 
 <!doctype html>
@@ -13,6 +13,39 @@ const desc = description ?? "Fisioterapia e Osteopatia — Maia";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fbfaf8" />
+    <script is:inline>
+      (() => {
+        const allowed = new Set(["light", "dark", "computer"]);
+        const storageKey = "theme";
+        const themeColors = {
+          light: "#fbfaf8",
+          dark: "#111521",
+        };
+        const getStoredPreference = () => {
+          try {
+            const value = window.localStorage.getItem(storageKey);
+            return allowed.has(value) ? value : "computer";
+          } catch {
+            return "computer";
+          }
+        };
+        const getSystemTheme = () =>
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        const preference = getStoredPreference();
+        const theme = preference === "computer" ? getSystemTheme() : preference;
+
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute("content", themeColors[theme]);
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={desc} />
     <link rel="icon" href="fica_logo.jpeg" type="image/x-icon" />
@@ -24,6 +57,101 @@ const desc = description ?? "Fisioterapia e Osteopatia — Maia";
   <body class="bg-brand-wash">
     <slot />
     <ScrollToTop />
+    <script is:inline>
+      (() => {
+        const allowed = new Set(["light", "dark", "computer"]);
+        const storageKey = "theme";
+        const themeColors = {
+          light: "#fbfaf8",
+          dark: "#111521",
+        };
+        const systemQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+
+        const getStoredPreference = () => {
+          try {
+            const value = window.localStorage.getItem(storageKey);
+            return allowed.has(value) ? value : "computer";
+          } catch {
+            return "computer";
+          }
+        };
+
+        const storePreference = (preference) => {
+          try {
+            window.localStorage.setItem(storageKey, preference);
+          } catch {
+            // Ignore storage failures; the current page still updates.
+          }
+        };
+
+        const getSystemTheme = () => (systemQuery.matches ? "dark" : "light");
+
+        const syncControls = (preference, effectiveTheme) => {
+          document.querySelectorAll("[data-theme-option]").forEach((button) => {
+            const active = button.dataset.themeOption === preference;
+            button.setAttribute("aria-checked", active ? "true" : "false");
+            button.dataset.active = active ? "true" : "false";
+          });
+
+          document
+            .querySelectorAll("[data-theme-selector]")
+            .forEach((selector) => {
+              selector.setAttribute(
+                "aria-label",
+                `Escolher tema. Atual: ${preference}. Tema aplicado: ${effectiveTheme}.`
+              );
+            });
+        };
+
+        const applyPreference = (preference, persist = false) => {
+          const cleanPreference = allowed.has(preference)
+            ? preference
+            : "computer";
+          const effectiveTheme =
+            cleanPreference === "computer" ? getSystemTheme() : cleanPreference;
+
+          document.documentElement.dataset.themePreference = cleanPreference;
+          document.documentElement.dataset.theme = effectiveTheme;
+          document.documentElement.style.colorScheme = effectiveTheme;
+
+          if (metaThemeColor) {
+            metaThemeColor.setAttribute("content", themeColors[effectiveTheme]);
+          }
+
+          if (persist) {
+            storePreference(cleanPreference);
+          }
+
+          syncControls(cleanPreference, effectiveTheme);
+        };
+
+        document.addEventListener("click", (event) => {
+          const target =
+            event.target instanceof Element ? event.target : null;
+          const button = target?.closest("[data-theme-option]");
+          if (!button) return;
+          applyPreference(button.dataset.themeOption, true);
+        });
+
+        const onSystemThemeChange = () => {
+          if (getStoredPreference() === "computer") {
+            applyPreference("computer", false);
+          }
+        };
+
+        if (systemQuery.addEventListener) {
+          systemQuery.addEventListener("change", onSystemThemeChange);
+        } else {
+          systemQuery.addListener(onSystemThemeChange);
+        }
+
+        applyPreference(getStoredPreference(), false);
+        document.addEventListener("astro:page-load", () => {
+          applyPreference(getStoredPreference(), false);
+        });
+      })();
+    </script>
     <script is:inline>
       (() => {
         const reveal = () => {

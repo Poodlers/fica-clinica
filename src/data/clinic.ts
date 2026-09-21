@@ -5,10 +5,14 @@ export const clinic = {
   tagline: "Fisioterapia Integrada Corpo Ativo",
   addressShort: "Castêlo da Maia, Maia",
   address:
-    "Via Eng Belmiro Mendes de Azevedo n353, 4475-401 Castêlo da Maia, Maia",
+    "Via Eng Belmiro Mendes de Azevedo 353, 4475-401 Castêlo da Maia, Maia",
   phoneDisplay: "914 710 359",
   phoneE164: "+351914710359",
   email: "info.gabinetefica@gmail.com",
+  legal: {
+    establishmentRegistration: "E180160",
+    operatingLicense: "26540/2025",
+  },
   hours: [
     { label: "Segunda a Sexta", value: "8h - 20h (sob marcação)" },
     { label: "Sábado", value: "8h - 13h (sob marcação)" },

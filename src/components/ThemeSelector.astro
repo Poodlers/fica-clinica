@@ -1,0 +1,35 @@
+---
+import Monitor from "@lucide/astro/icons/monitor";
+import Moon from "@lucide/astro/icons/moon";
+import Sun from "@lucide/astro/icons/sun";
+
+const options = [
+  { value: "light", label: "Light", icon: Sun },
+  { value: "dark", label: "Dark", icon: Moon },
+  { value: "computer", label: "Computer", icon: Monitor },
+] as const;
+---
+
+<div
+  class="theme-selector"
+  role="radiogroup"
+  aria-label="Escolher tema"
+  data-theme-selector
+>
+  {
+    options.map(({ value, label, icon: Icon }) => (
+      <button
+        type="button"
+        class="theme-option"
+        role="radio"
+        aria-checked={value === "computer" ? "true" : "false"}
+        aria-label={`Tema: ${label}`}
+        title={label}
+        data-theme-option={value}
+      >
+        <Icon class="h-4 w-4" stroke-width="1.9" aria-hidden="true" />
+        <span class="sr-only">{label}</span>
+      </button>
+    ))
+  }
+</div>
