@@ -1,11 +1,19 @@
 ---
 import "../styles/global.css";
+import CookieConsent from "../components/CookieConsent.astro";
 import ScrollToTop from "../components/ScrollToTop.astro";
 const { title, description } = Astro.props as {
   title: string;
   description?: string;
 };
 const desc = description ?? "Gabinete FICA — Fisioterapia e Osteopatia na Maia";
+const rawGtmContainerId =
+  typeof import.meta.env.PUBLIC_GTM_CONTAINER_ID === "string"
+    ? import.meta.env.PUBLIC_GTM_CONTAINER_ID.trim()
+    : "";
+const publicGtmContainerId = /^GTM-[A-Z0-9-]+$/.test(rawGtmContainerId)
+  ? rawGtmContainerId
+  : "";
 ---
 
 <!doctype html>
@@ -14,6 +22,170 @@ const desc = description ?? "Gabinete FICA — Fisioterapia e Osteopatia na Maia
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fbfaf8" />
+    <script is:inline define:vars={{ publicGtmContainerId }}>
+      (() => {
+        const cookieName = "fica_consent_preferences";
+        const consentVersion = "2026-10-gtm-v1";
+        const maxAgeSeconds = 15552000;
+        const containerId = publicGtmContainerId;
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag =
+          window.gtag ||
+          function gtag() {
+            window.dataLayer.push(arguments);
+          };
+
+        const consentFromPreferences = (preferences) => ({
+          analytics_storage: preferences.analytics ? "granted" : "denied",
+          ad_storage: preferences.marketing ? "granted" : "denied",
+          ad_user_data: preferences.marketing ? "granted" : "denied",
+          ad_personalization: preferences.marketing ? "granted" : "denied",
+        });
+
+        const defaultPreferences = {
+          analytics: false,
+          marketing: false,
+        };
+
+        window.gtag(
+          "consent",
+          "default",
+          consentFromPreferences(defaultPreferences)
+        );
+        window.gtag("set", "ads_data_redaction", true);
+
+        const hasOptionalConsent = (preferences) =>
+          Boolean(preferences?.analytics || preferences?.marketing);
+
+        const readPreferences = () => {
+          const prefix = `${cookieName}=`;
+          const cookie = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(prefix));
+
+          if (!cookie) return null;
+
+          try {
+            const parsed = JSON.parse(
+              decodeURIComponent(cookie.slice(prefix.length))
+            );
+
+            if (
+              parsed?.version !== consentVersion ||
+              typeof parsed.analytics !== "boolean" ||
+              typeof parsed.marketing !== "boolean" ||
+              typeof parsed.updatedAt !== "string" ||
+              Number.isNaN(Date.parse(parsed.updatedAt))
+            ) {
+              return null;
+            }
+
+            return {
+              version: consentVersion,
+              analytics: parsed.analytics,
+              marketing: parsed.marketing,
+              updatedAt: parsed.updatedAt,
+            };
+          } catch {
+            return null;
+          }
+        };
+
+        const writePreferences = (preferences) => {
+          const secure =
+            window.location.protocol === "https:" ? "; Secure" : "";
+          document.cookie = `${cookieName}=${encodeURIComponent(
+            JSON.stringify(preferences)
+          )}; Path=/; SameSite=Lax; Max-Age=${maxAgeSeconds}${secure}`;
+        };
+
+        const loadGtm = () => {
+          if (!containerId || window.__ficaGtmLoaded) return;
+          if (
+            document.querySelector(
+              `script[src*="googletagmanager.com/gtm.js?id=${containerId}"]`
+            )
+          ) {
+            window.__ficaGtmLoaded = true;
+            return;
+          }
+
+          window.__ficaGtmLoaded = true;
+          window.dataLayer.push({
+            "gtm.start": new Date().getTime(),
+            event: "gtm.js",
+          });
+
+          const firstScript = document.getElementsByTagName("script")[0];
+          const gtmScript = document.createElement("script");
+          gtmScript.async = true;
+          gtmScript.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(
+            containerId
+          )}`;
+          firstScript.parentNode.insertBefore(gtmScript, firstScript);
+        };
+
+        const applyPreferences = (preferences, options = {}) => {
+          const nextPreferences = {
+            version: consentVersion,
+            analytics: Boolean(preferences?.analytics),
+            marketing: Boolean(preferences?.marketing),
+            updatedAt:
+              typeof preferences?.updatedAt === "string" &&
+              !Number.isNaN(Date.parse(preferences.updatedAt))
+                ? preferences.updatedAt
+                : new Date().toISOString(),
+          };
+
+          window.gtag(
+            "consent",
+            "update",
+            consentFromPreferences(nextPreferences)
+          );
+
+          if (options.persist) {
+            writePreferences(nextPreferences);
+          }
+
+          if (options.emit) {
+            window.dataLayer.push({
+              event: "fica_consent_update",
+              analyticsConsent: nextPreferences.analytics,
+              marketingConsent: nextPreferences.marketing,
+            });
+            window.dispatchEvent(
+              new CustomEvent("fica:consent-updated", {
+                detail: nextPreferences,
+              })
+            );
+          }
+
+          if (hasOptionalConsent(nextPreferences)) {
+            loadGtm();
+          }
+
+          return nextPreferences;
+        };
+
+        window.FicaConsent = {
+          version: consentVersion,
+          cookieName,
+          readPreferences,
+          savePreferences(preferences) {
+            return applyPreferences(preferences, {
+              persist: true,
+              emit: true,
+            });
+          },
+        };
+
+        const storedPreferences = readPreferences();
+        if (storedPreferences) {
+          applyPreferences(storedPreferences);
+        }
+      })();
+    </script>
     <script is:inline>
       (() => {
         const allowed = new Set(["light", "dark", "computer"]);
@@ -55,8 +227,27 @@ const desc = description ?? "Gabinete FICA — Fisioterapia e Osteopatia na Maia
   </head>
 
   <body class="bg-brand-wash">
+    {
+      publicGtmContainerId && (
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${publicGtmContainerId}`}
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+          />
+        </noscript>
+      )
+    }
+    <noscript>
+      <div class="bg-panel-strong px-5 py-3 text-sm text-fg ring-1 ring-line">
+        As preferências de cookies requerem JavaScript. Pode consultar a
+        <a href="/privacidade-e-cookies"> política de privacidade e cookies</a>.
+      </div>
+    </noscript>
     <slot />
     <ScrollToTop />
+    <CookieConsent />
     <script is:inline>
       (() => {
         const allowed = new Set(["light", "dark", "computer"]);

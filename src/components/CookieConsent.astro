@@ -1,0 +1,202 @@
+<div
+  data-cookie-banner
+  hidden
+  class="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-panel-strong/95 px-5 py-4 text-fg shadow-[0_-18px_42px_rgba(23,27,48,0.14)] backdrop-blur"
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div class="max-w-3xl">
+      <h2 class="text-base font-semibold text-heading">Privacidade e cookies</h2>
+      <p class="mt-1 text-sm text-muted">
+        Usamos cookies necessários para o funcionamento do site. Com a sua
+        autorização, podemos também usar cookies de analytics e marketing.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <button type="button" class="btn-secondary" data-consent-manage>
+        Gerir preferências
+      </button>
+      <button type="button" class="btn-secondary" data-consent-reject>
+        Rejeitar tudo
+      </button>
+      <button type="button" class="btn-primary" data-consent-accept>
+        Aceitar tudo
+      </button>
+    </div>
+  </div>
+</div>
+
+<dialog
+  class="cookie-consent-dialog w-[min(92vw,42rem)] rounded-lg bg-panel-strong p-0 text-fg shadow-[0_24px_80px_rgba(0,0,0,0.28)] ring-1 ring-line"
+  data-cookie-dialog
+  aria-labelledby="cookie-consent-title"
+>
+  <div class="p-5 sm:p-6">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h2 id="cookie-consent-title" class="text-xl font-semibold text-heading">
+          Preferências de cookies
+        </h2>
+        <p class="mt-2 text-sm text-muted">
+          Pode escolher que categorias opcionais pretende autorizar.
+        </p>
+      </div>
+      <button type="button" class="btn-ghost px-3" data-consent-close aria-label="Fechar">
+        Fechar
+      </button>
+    </div>
+
+    <div class="mt-6 space-y-4">
+      <label class="flex items-start justify-between gap-5 rounded-lg bg-panel p-4 ring-1 ring-line">
+        <span>
+          <span class="block text-sm font-semibold text-heading">Necessários</span>
+          <span class="mt-1 block text-sm text-muted">
+            Essenciais para o funcionamento do site e preferências funcionais,
+            como o tema visual.
+          </span>
+        </span>
+        <input type="checkbox" checked disabled class="mt-1 h-5 w-5 accent-primary" />
+      </label>
+
+      <label class="flex items-start justify-between gap-5 rounded-lg bg-panel p-4 ring-1 ring-line">
+        <span>
+          <span class="block text-sm font-semibold text-heading">Analytics</span>
+          <span class="mt-1 block text-sm text-muted">
+            Ajuda-nos a perceber a utilização geral do site.
+          </span>
+        </span>
+        <input
+          type="checkbox"
+          class="mt-1 h-5 w-5 accent-primary"
+          data-consent-analytics
+        />
+      </label>
+
+      <label class="flex items-start justify-between gap-5 rounded-lg bg-panel p-4 ring-1 ring-line">
+        <span>
+          <span class="block text-sm font-semibold text-heading">Marketing</span>
+          <span class="mt-1 block text-sm text-muted">
+            Permite medir campanhas e gerir etiquetas de publicidade aprovadas.
+          </span>
+        </span>
+        <input
+          type="checkbox"
+          class="mt-1 h-5 w-5 accent-primary"
+          data-consent-marketing
+        />
+      </label>
+    </div>
+
+    <div class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <button type="button" class="btn-secondary" data-consent-close>
+        Cancelar
+      </button>
+      <button type="button" class="btn-primary" data-consent-save>
+        Guardar preferências
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .cookie-consent-dialog::backdrop {
+    background: rgb(23 27 48 / 0.5);
+    backdrop-filter: blur(2px);
+  }
+</style>
+
+<script>
+  (() => {
+    const banner = document.querySelector("[data-cookie-banner]");
+    const dialog = document.querySelector("[data-cookie-dialog]");
+    const analyticsInput = document.querySelector("[data-consent-analytics]");
+    const marketingInput = document.querySelector("[data-consent-marketing]");
+
+    const getConsentApi = () => window.FicaConsent;
+
+    const setInputs = (preferences) => {
+      if (analyticsInput instanceof HTMLInputElement) {
+        analyticsInput.checked = Boolean(preferences?.analytics);
+      }
+      if (marketingInput instanceof HTMLInputElement) {
+        marketingInput.checked = Boolean(preferences?.marketing);
+      }
+    };
+
+    const hideBanner = () => {
+      banner?.setAttribute("hidden", "");
+    };
+
+    const showBanner = () => {
+      banner?.removeAttribute("hidden");
+    };
+
+    const closeDialog = () => {
+      if (dialog instanceof HTMLDialogElement && dialog.open) {
+        dialog.close();
+      }
+    };
+
+    const openPreferences = () => {
+      setInputs(getConsentApi()?.readPreferences() ?? {});
+
+      if (dialog instanceof HTMLDialogElement) {
+        if (!dialog.open) dialog.showModal();
+      }
+    };
+
+    const savePreferences = (preferences) => {
+      getConsentApi()?.savePreferences(preferences);
+      hideBanner();
+      closeDialog();
+    };
+
+    document.addEventListener("click", (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target) return;
+
+      if (target.closest("[data-consent-accept]")) {
+        savePreferences({ analytics: true, marketing: true });
+        return;
+      }
+
+      if (target.closest("[data-consent-reject]")) {
+        savePreferences({ analytics: false, marketing: false });
+        return;
+      }
+
+      if (
+        target.closest("[data-consent-manage]") ||
+        target.closest("[data-cookie-preferences]")
+      ) {
+        event.preventDefault();
+        openPreferences();
+        return;
+      }
+
+      if (target.closest("[data-consent-close]")) {
+        closeDialog();
+        return;
+      }
+
+      if (target.closest("[data-consent-save]")) {
+        savePreferences({
+          analytics:
+            analyticsInput instanceof HTMLInputElement
+              ? analyticsInput.checked
+              : false,
+          marketing:
+            marketingInput instanceof HTMLInputElement
+              ? marketingInput.checked
+              : false,
+        });
+      }
+    });
+
+    if (getConsentApi()?.readPreferences()) {
+      hideBanner();
+    } else {
+      showBanner();
+    }
+  })();
+</script>
