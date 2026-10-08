@@ -2,6 +2,9 @@
 import BaseLayout from "../layouts/Layout.astro";
 import Footer from "../components/Footer.astro";
 import { clinic } from "../data/clinic";
+import ArrowLeft from "@lucide/astro/icons/arrow-left";
+
+const lastUpdated = "8 de outubro de 2026";
 ---
 
 <BaseLayout
@@ -10,78 +13,198 @@ import { clinic } from "../data/clinic";
 >
   <main class="section">
     <div class="container">
-      <article class="mx-auto max-w-3xl">
+      <article class="mx-auto max-w-4xl">
+        <div
+          class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <a class="btn-secondary w-fit" href="/" aria-label="Voltar ao site FICA">
+            <ArrowLeft class="h-4 w-4" aria-hidden="true" />
+            Voltar ao site
+          </a>
+          <p class="text-sm text-muted">Última atualização: {lastUpdated}</p>
+        </div>
+
         <h1 class="mt-3">Privacidade e cookies</h1>
 
         <p class="mt-5 text-muted">
-          Esta página explica como o site {clinic.name} utiliza cookies, armazenamento
-          local e etiquetas de medição.
+          Esta página explica, em linguagem clara, como o site {clinic.name} trata
+          dados pessoais e usa cookies, armazenamento local e etiquetas de medição.
+          Aplica-se apenas à navegação neste site.
         </p>
 
         <section class="mt-8">
-          <h2>Responsável pelo site</h2>
+          <h2>Responsável pelo tratamento</h2>
           <p class="mt-3 text-muted">
-            O site é operado pela {clinic.name}. Para pedidos relacionados com
-            privacidade, pode contactar-nos através de{" "}
-            <a href={`mailto:${clinic.email}`}>{clinic.email}</a>.
+            O responsável pelo tratamento dos dados neste site é {clinic.name},
+            NIPC {clinic.legal.nipc}, com morada em {clinic.address}. Para questões
+            sobre privacidade ou para exercer os seus direitos, contacte-nos através
+            de <a href={`mailto:${clinic.email}`}>{clinic.email}</a>.
           </p>
         </section>
 
         <section class="mt-8">
-          <h2>Categorias de consentimento</h2>
-          <div class="mt-4 space-y-4">
-            <div class="rounded-lg bg-panel p-4 ring-1 ring-line">
-              <h3>Necessários</h3>
-              <p class="mt-2 text-muted">
-                Estes elementos são usados para o funcionamento do site e para
-                preferências funcionais, como a escolha do tema visual. Não são
-                usados para analytics ou marketing.
-              </p>
-            </div>
-            <div class="rounded-lg bg-panel p-4 ring-1 ring-line">
-              <h3>Analytics</h3>
-              <p class="mt-2 text-muted">
-                Com a sua autorização, podemos usar etiquetas de analytics para
-                perceber a utilização geral do site e melhorar a experiência.
-              </p>
-            </div>
-            <div class="rounded-lg bg-panel p-4 ring-1 ring-line">
-              <h3>Marketing</h3>
-              <p class="mt-2 text-muted">
-                Com a sua autorização, podemos usar etiquetas de marketing para
-                medir campanhas e publicidade aprovada. O site não deve enviar
-                dados de saúde, detalhes de marcação, texto livre, nomes,
-                telefones ou emails para estas plataformas.
-              </p>
-            </div>
+          <h2>Que dados tratamos neste site</h2>
+          <p class="mt-3 text-muted">
+            Este site não tem formulário de marcação nem área de paciente. Durante
+            a navegação, podemos tratar dados técnicos limitados, como endereço IP,
+            tipo de dispositivo, navegador, páginas visitadas, origem da visita e
+            preferências de consentimento. Se nos contactar por telefone, email ou
+            WhatsApp através dos links do site, trataremos os dados que nos enviar
+            para responder ao seu pedido.
+          </p>
+          <p class="mt-3 text-muted">
+            Não recolhemos, através deste site, dados clínicos, detalhes de
+            marcação, texto livre, nomes, telefones ou emails para fins de
+            analytics ou marketing.
+          </p>
+        </section>
+
+        <section class="mt-8">
+          <h2>Finalidades e fundamentos legais</h2>
+          <div class="mt-4 overflow-x-auto">
+            <table class="w-full min-w-[42rem] border-collapse text-left text-sm">
+              <thead>
+                <tr class="border-b border-line text-heading">
+                  <th class="py-3 pr-4 font-semibold">Finalidade</th>
+                  <th class="py-3 pr-4 font-semibold">Exemplos</th>
+                  <th class="py-3 pr-4 font-semibold">Fundamento legal</th>
+                </tr>
+              </thead>
+              <tbody class="text-muted">
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">Funcionamento do site</td>
+                  <td class="py-3 pr-4">
+                    Segurança, apresentação das páginas, tema visual e preferências
+                    de consentimento.
+                  </td>
+                  <td class="py-3 pr-4">
+                    Interesse legítimo e armazenamento estritamente necessário.
+                  </td>
+                </tr>
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">Resposta a contactos</td>
+                  <td class="py-3 pr-4">
+                    Responder a mensagens enviadas por email, telefone ou WhatsApp.
+                  </td>
+                  <td class="py-3 pr-4">
+                    Diligências pré-contratuais, execução de pedido e interesse
+                    legítimo em responder.
+                  </td>
+                </tr>
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">Analytics</td>
+                  <td class="py-3 pr-4">
+                    Medição agregada da utilização do site para melhorar conteúdos
+                    e experiência.
+                  </td>
+                  <td class="py-3 pr-4">Consentimento.</td>
+                </tr>
+                <tr>
+                  <td class="py-3 pr-4">Marketing</td>
+                  <td class="py-3 pr-4">
+                    Medição de campanhas e publicidade online autorizada.
+                  </td>
+                  <td class="py-3 pr-4">Consentimento.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section class="mt-8">
-          <h2>Google Tag Manager</h2>
+          <h2>Cookies e tecnologias semelhantes</h2>
           <p class="mt-3 text-muted">
-            O site usa Google Tag Manager como ponto único de integração para
-            etiquetas de analytics e marketing.
+            Os cookies necessários e o armazenamento local ajudam o site a funcionar
+            e a guardar escolhas feitas por si. Cookies de analytics e marketing só
+            são usados depois de dar consentimento para a categoria correspondente.
           </p>
-          <p class="mt-3 text-muted">
-            Quando são usados produtos Google, pode consultar informação sobre a
-            forma como a Google utiliza dados em{" "}
-            <a
-              href="https://business.safety.google/privacy/"
-              rel="noreferrer"
-              target="_blank"
-            >
-              business.safety.google/privacy
-            </a>.
-          </p>
+          <div class="mt-4 overflow-x-auto">
+            <table class="w-full min-w-[42rem] border-collapse text-left text-sm">
+              <thead>
+                <tr class="border-b border-line text-heading">
+                  <th class="py-3 pr-4 font-semibold">Tecnologia</th>
+                  <th class="py-3 pr-4 font-semibold">Quem usa</th>
+                  <th class="py-3 pr-4 font-semibold">Finalidade</th>
+                  <th class="py-3 pr-4 font-semibold">Duração</th>
+                </tr>
+              </thead>
+              <tbody class="text-muted">
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">fica_consent_preferences</td>
+                  <td class="py-3 pr-4">{clinic.name}</td>
+                  <td class="py-3 pr-4">
+                    Guarda as suas escolhas de consentimento e a data da última
+                    atualização.
+                  </td>
+                  <td class="py-3 pr-4">Até 180 dias.</td>
+                </tr>
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">theme</td>
+                  <td class="py-3 pr-4">{clinic.name}</td>
+                  <td class="py-3 pr-4">
+                    Guarda a preferência de tema visual no armazenamento local do
+                    navegador.
+                  </td>
+                  <td class="py-3 pr-4">
+                    Até alterar a preferência ou limpar o armazenamento do navegador.
+                  </td>
+                </tr>
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">Google Tag Manager</td>
+                  <td class="py-3 pr-4">Google</td>
+                  <td class="py-3 pr-4">
+                    Carrega apenas as etiquetas autorizadas pelas suas preferências.
+                  </td>
+                  <td class="py-3 pr-4">
+                    Conforme as etiquetas consentidas que forem carregadas.
+                  </td>
+                </tr>
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">Google Analytics 4</td>
+                  <td class="py-3 pr-4">Google</td>
+                  <td class="py-3 pr-4">
+                    Medição de visitas, páginas visualizadas e utilização agregada
+                    do site.
+                  </td>
+                  <td class="py-3 pr-4">
+                    Só após consentimento de analytics; o prazo pode variar consoante
+                    o serviço e a configuração aplicada.
+                  </td>
+                </tr>
+                <tr class="border-b border-line">
+                  <td class="py-3 pr-4">Google Ads</td>
+                  <td class="py-3 pr-4">Google</td>
+                  <td class="py-3 pr-4">
+                    Medição de campanhas e conversões publicitárias.
+                  </td>
+                  <td class="py-3 pr-4">
+                    Só após consentimento de marketing; o prazo pode variar consoante
+                    o serviço e a configuração aplicada.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="py-3 pr-4">Meta Pixel</td>
+                  <td class="py-3 pr-4">Meta</td>
+                  <td class="py-3 pr-4">
+                    Medição de campanhas e conversões publicitárias.
+                  </td>
+                  <td class="py-3 pr-4">
+                    Só após consentimento de marketing; o prazo pode variar consoante
+                    o serviço e a configuração aplicada.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section class="mt-8">
-          <h2>Duração e alteração das preferências</h2>
+          <h2>Como gerir o consentimento</h2>
           <p class="mt-3 text-muted">
-            Guardamos a sua escolha em cookies durante até 180 dias. Pode
-            alterar ou retirar o consentimento a qualquer momento através do
-            botão abaixo ou do rodapé do site.
+            Pode aceitar, recusar ou escolher separadamente as categorias opcionais.
+            Pode também alterar ou retirar o consentimento a qualquer momento. A
+            retirada do consentimento não afeta a licitude dos tratamentos feitos
+            antes dessa retirada.
           </p>
           <button
             type="button"
@@ -93,63 +216,74 @@ import { clinic } from "../data/clinic";
         </section>
 
         <section class="mt-8">
-          <h2>Lista de fornecedores</h2>
+          <h2>Fornecedores e destinatários</h2>
           <p class="mt-3 text-muted">
-            A configuração prevê que os fornecedores abaixo possam ser geridos
-            através do Google Tag Manager, sempre sujeitos às preferências de
-            consentimento indicadas.
-          </p>
-          <div class="mt-4 overflow-x-auto">
-            <table
-              class="w-full min-w-[38rem] border-collapse text-left text-sm"
+            Podemos recorrer a prestadores técnicos necessários para alojamento,
+            manutenção e segurança do site. Quando autoriza analytics ou marketing,
+            as etiquetas correspondentes podem ser carregadas através do Google Tag
+            Manager. Pode consultar informação sobre a forma como a Google trata
+            dados em{" "}
+            <a
+              href="https://business.safety.google/privacy/"
+              rel="noreferrer"
+              target="_blank"
             >
-              <thead>
-                <tr class="border-b border-line text-heading">
-                  <th class="py-3 pr-4 font-semibold">Fornecedor</th>
-                  <th class="py-3 pr-4 font-semibold">Finalidade</th>
-                  <th class="py-3 pr-4 font-semibold">Categoria</th>
-                </tr>
-              </thead>
-              <tbody class="text-muted">
-                <tr class="border-b border-line">
-                  <td class="py-3 pr-4">Google Tag Manager</td>
-                  <td class="py-3 pr-4">Gestão das etiquetas aprovadas</td>
-                  <td class="py-3 pr-4">Infraestrutura de consentimento</td>
-                </tr>
-                <tr class="border-b border-line">
-                  <td class="py-3 pr-4">Google Analytics 4</td>
-                  <td class="py-3 pr-4"
-                    >Medição agregada da utilização do site</td
-                  >
-                  <td class="py-3 pr-4">Analytics</td>
-                </tr>
-                <tr class="border-b border-line">
-                  <td class="py-3 pr-4">Google Ads</td>
-                  <td class="py-3 pr-4">Medição de campanhas aprovadas</td>
-                  <td class="py-3 pr-4">Marketing</td>
-                </tr>
-                <tr class="border-b border-line">
-                  <td class="py-3 pr-4">Meta Pixel</td>
-                  <td class="py-3 pr-4">Medição de campanhas aprovadas</td>
-                  <td class="py-3 pr-4">Marketing</td>
-                </tr>
-                <tr>
-                  <td class="py-3 pr-4">Fornecedores futuros</td>
-                  <td class="py-3 pr-4">
-                    Apenas após atualização da matriz de tracking e desta página
-                  </td>
-                  <td class="py-3 pr-4">Analytics ou marketing</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+              business.safety.google/privacy
+            </a>{" "}
+            e informação da Meta em{" "}
+            <a
+              href="https://www.facebook.com/privacy/policy/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              facebook.com/privacy/policy
+            </a>.
+          </p>
           <p class="mt-4 text-muted">
-            Antes de publicar novas etiquetas, confirme o fornecedor,
-            finalidade, categoria de consentimento e dados tratados. Não devem
-            ser enviados dados de saúde ou dados identificativos de pacientes
-            para estas plataformas.
+            Alguns fornecedores podem tratar dados fora do Espaço Económico
+            Europeu. Quando isso acontece, são usados mecanismos reconhecidos pelo
+            RGPD, como decisões de adequação ou cláusulas contratuais-tipo.
           </p>
         </section>
+
+        <section class="mt-8">
+          <h2>Conservação dos dados</h2>
+          <p class="mt-3 text-muted">
+            Guardamos as preferências de consentimento durante até 180 dias. Dados
+            enviados por si através de contacto direto são conservados apenas pelo
+            tempo necessário para responder ao pedido e cumprir obrigações legais,
+            contabilísticas ou de defesa de direitos, quando aplicável.
+          </p>
+        </section>
+
+        <section class="mt-8">
+          <h2>Os seus direitos</h2>
+          <p class="mt-3 text-muted">
+            Nos termos do RGPD, pode pedir acesso, retificação, apagamento,
+            limitação, oposição, portabilidade dos dados, bem como retirar o
+            consentimento quando o tratamento dependa dele. Pode exercer estes
+            direitos através de <a href={`mailto:${clinic.email}`}>{clinic.email}</a>.
+          </p>
+          <p class="mt-3 text-muted">
+            Tem ainda o direito de apresentar reclamação à Comissão Nacional de
+            Proteção de Dados em{" "}
+            <a href="https://www.cnpd.pt/" rel="noreferrer" target="_blank">
+              cnpd.pt
+            </a>.
+          </p>
+        </section>
+
+        <div
+          class="mt-10 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p class="text-sm text-muted">
+            Pode continuar a navegar no site sem aceitar cookies opcionais.
+          </p>
+          <a class="btn-primary w-fit" href="/">
+            <ArrowLeft class="h-4 w-4" aria-hidden="true" />
+            Voltar ao site
+          </a>
+        </div>
       </article>
     </div>
   </main>
